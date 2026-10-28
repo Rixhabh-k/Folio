@@ -1,0 +1,132 @@
+body {
+  margin: 0;
+  background: #000;
+}
+
+.register {
+  --white: #ffffff;
+  --black: #000000;
+  --lime: #bfff00;
+  --muted: #3a3a3a;
+
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: var(--black);
+  color: var(--white);
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  box-sizing: border-box;
+}
+
+.register *,
+.register *::before,
+.register *::after {
+  box-sizing: border-box;
+}
+
+.register-form {
+  width: 100%;
+  max-width: 380px;
+  padding: 32px;
+  background: var(--black);
+  border: 2px solid var(--white);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.register-title {
+  margin: 0 0 4px;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--white);
+}
+
+.register-form p {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--white);
+}
+
+.field input {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 16px;
+  font-family: inherit;
+  color: var(--white);
+  background: var(--black);
+  border: 2px solid var(--muted);
+  border-radius: 0;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.field input:focus {
+  border-color: var(--lime);
+  box-shadow: 4px 4px 0 var(--lime);
+}
+
+.register-btn {
+  margin-top: 4px;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: inherit;
+  color: var(--black);
+  background: var(--lime);
+  border: 2px solid var(--lime);
+  border-radius: 0;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.register-btn:hover:not(:disabled) {
+  background: var(--white);
+  border-color: var(--white);
+}
+
+.register-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.register-btn:focus-visible {
+  outline: 2px solid var(--lime);
+  outline-offset: 3px;
+}
+
+.register-link {
+  text-align: center;
+  font-size: 14px;
+}
+
+.register-link a {
+  color: var(--lime);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.register-link a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+  .register-form {
+    padding: 24px;
+  }
+}

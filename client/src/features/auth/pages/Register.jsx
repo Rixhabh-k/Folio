@@ -1,74 +1,116 @@
+
 import '../shared/global.css'
 import { useState } from 'react'
 import { useAuth } from '../hooks/useAuth'
-import { useNavigate } from 'react-router-dom'
-
-
+import { useNavigate, Link } from 'react-router-dom'
 
 const Register = () => {
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const { handleRegister } = useAuth()
-
   const navigate = useNavigate()
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    handleRegister({ username, email, password })
-    navigate("/login")
+
+    try {
+      await handleRegister({ username, email, password })
+      navigate('/login')
+    } catch (error) {
+      console.error('Registration failed:', error)
+    }
   }
 
   return (
-    <div className="register">
-      <form className="register-form" onSubmit={handleSubmit}>
-        <h1 className="register-title">Create account</h1>
+    <main className="auth-page">
+      <div className="ambient ambient-one" />
+      <div className="ambient ambient-two" />
+      <div className="ambient ambient-three" />
 
-        <div className="field">
-          <label htmlFor="username">Username</label>
-          <input
-            id="username"
-            type="text"
-            name="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            autoComplete="username"
-            required
-          />
+      <section className="glass-card">
+        <div className="brand">
+          <div className="brand-icon">
+            <span>✳</span>
+          </div>
+          <span className="brand-name">FOLIO</span>
         </div>
 
-        <div className="field">
-          <label htmlFor="email">Email</label>
-          <input
-            id="email"
-            type="email"
-            name="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            autoComplete="email"
-            required
-          />
+        <div className="auth-heading">
+          <span className="eyebrow">
+            <span className="status-dot" />
+            YOUR NEXT CHAPTER STARTS HERE
+          </span>
+
+          <h1>Create your<br />own <span>space.</span></h1>
+
+          <p>
+            Join the community. Create an account and
+            make something extraordinary.
+          </p>
         </div>
 
-        <div className="field">
-          <label htmlFor="password">Password</label>
-          <input
-            id="password"
-            type="password"
-            name="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            autoComplete="new-password"
-            minLength={8}
-            required
-          />
+        <form className="register-form" onSubmit={handleSubmit}>
+          <div className="field">
+            <label htmlFor="username">USERNAME</label>
+            <input
+              id="username"
+              type="text"
+              placeholder="Choose a username"
+              name="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              autoComplete="username"
+              required
+            />
+          </div>
+
+          <div className="field">
+            <label htmlFor="email">EMAIL ADDRESS</label>
+            <input
+              id="email"
+              type="email"
+              placeholder="you@example.com"
+              name="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              autoComplete="email"
+              required
+            />
+          </div>
+
+          <div className="field">
+            <label htmlFor="password">PASSWORD</label>
+            <input
+              id="password"
+              type="password"
+              placeholder="Minimum 8 characters"
+              name="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              autoComplete="new-password"
+              minLength={8}
+              required
+            />
+          </div>
+
+          <button type="submit" className="register-btn">
+            <span>Create account</span>
+            <span className="btn-arrow">↗</span>
+          </button>
+        </form>
+
+        <div className="auth-footer">
+          <span>Already have an account?</span>
+          <Link to="/login">Sign in <span>↗</span></Link>
         </div>
 
-        <button type="submit" className="register-btn">
-          Create account
-        </button>
-      </form>
-    </div>
+        <div className="card-bottom">
+          <span>© 2026 FOLIO</span>
+          <span><span className="footer-dot" /> SECURE REGISTRATION</span>
+        </div>
+      </section>
+    </main>
   )
 }
 

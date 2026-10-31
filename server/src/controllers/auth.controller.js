@@ -31,7 +31,7 @@ export async function registerUser(req, res) {
       process.env.JWT_SECRET,
     );
 
-    const link = `http://localhost:5173/verify-email?token=${emailVerificationToken}`
+    const link = `http://localhost:5173/verify-email?token=${emailVerificationToken}`;
 
     //send email for verification
     await sendEmail({
@@ -139,7 +139,6 @@ export async function verifyEmail(req, res) {
   }
 }
 
-
 export async function loginUser(req, res) {
   try {
     const { username, password } = req.body;
@@ -167,10 +166,7 @@ export async function loginUser(req, res) {
       });
     }
 
-    const isPasswordValid = await bcrypt.compare(
-      password,
-      user.password
-    );
+    const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
       return res.status(401).json({
@@ -179,26 +175,65 @@ export async function loginUser(req, res) {
       });
     }
 
-    const token = jwt.sign(
-      { id: user._id },
-      process.env.JWT_SECRET,
-      { expiresIn: "1d" }
-    );
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "1d",
+    });
 
     res.cookie("token", token);
 
     return res.status(200).json({
       success: true,
       message: `${user.username} logged in successfully`,
+      user: {
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+      },
     });
-
   } catch (error) {
     console.error("Login error:", error);
 
     return res.status(500).json({
       success: false,
       message: "Internal server error",
+      
     });
   }
 }
 
+export async function getMe(req,res){
+  try {
+    const userId = req.user.id;
+
+    
+
+    const user = await userModel.findById(userId)  //.select("-password")
+
+    if(!user){
+      return res.status(404).json({
+        success: false,
+        message: "user not found",
+        user
+      })
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "user fetched successfully",
+      user: {
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+      },
+    })
+
+  } catch (error) {
+    
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error
+    });
+  }
+}

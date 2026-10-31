@@ -1,42 +1,68 @@
-import { createContext, useState } from "react";
-import { login, register } from "./services/auth.service";
+import { createContext, useState, useEffect } from "react";
+import { login, register, getMe } from "./services/auth.service";
 
-export const AuthContext = createContext()
+export const AuthContext = createContext();
 
-export function AuthProvider({children}){
+export function AuthProvider({ children }) {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-    const [user, setUser] = useState(null)
-    const [loading, setLoading] = useState(false)
+  // Refresh ke baad existing login check karo
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await getMe();
+        setUser(response.user);
+      } catch (error) {
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    const handleRegister = async ({username,email,password}) =>{
-        setLoading(true)
-        try {
-            const response = await register({username,email,password})
-            setUser(response.user)
-            return response
-        } catch (error) {
-            console.log(error)
-        } finally {
-            setLoading(false)
-        }
+    fetchUser();
+  }, []);
+
+  const handleRegister = async ({ username, email, password }) => {
+    try {
+      setLoading(true);
+      return await register({ username, email, password });
+    } catch (error) {
+      console.error("Registration failed:", error);
+      throw error;
+    } finally {
+      setLoading(false);
     }
+  };
 
-    const handleLogin = async ({username,password}) =>{
-        setLoading(true)
-        try {
-            const response = await login({username,password})
-            setUser(response.user)
-            return response
-        } catch (error) {
-             console.log(error)
-        } finally {
-            setLoading(false)
-        }
+  const handleLogin = async ({ username, password }) => {
+    try {
+      setLoading(true);
+
+      const response = await login({ username, password });
+
+      console.log("Login response:", response);
+
+      setUser(response.user);
+
+      return response;
+    } catch (error) {
+      console.error("Login failed:", error);
+      throw error;
+    } finally {
+      setLoading(false);
     }
+  };
 
-    return (
-        <AuthContext.Provider value={{user, loading,handleRegister,handleLogin}} >
-            {children}
-        </AuthContext.Provider>
-    )
+  const getMe = async()=>{
+
+  }
+
+  return (
+    <AuthContext.Provider
+      value={{ user, loading, handleRegister, handleLogin, getMe }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 }

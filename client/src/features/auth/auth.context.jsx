@@ -1,6 +1,8 @@
 
 import { createContext, useState, useEffect } from "react";
 import {
+  forgetUsername,
+  verifyUsername,
   login,
   register,
   getMe as getMeService,
@@ -80,6 +82,31 @@ export function AuthProvider({ children }) {
     }
   };
 
+  const handleForgetUsername = async({email})=>{
+    try {
+      setLoading(true)
+      return await forgetUsername({email})
+    } catch (error) {
+      console.error("forget username email sent failed:", error);
+      throw error;
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handelForgetUsernameOtp = async({email,otp})=>{
+    try {
+      setLoading(true);
+
+      return await verifyUsername({ email, otp });
+    } catch (error) {
+      console.error("Verify forget username otp failed:", error);
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -90,6 +117,8 @@ export function AuthProvider({ children }) {
         handleLogin,
         updateUser,
         refreshUser,
+        handleForgetUsername,
+        handelForgetUsernameOtp
       }}
     >
       {children}

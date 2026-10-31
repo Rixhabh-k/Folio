@@ -1,4 +1,3 @@
-
 import "../shared/global.css";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -92,14 +91,8 @@ const Login = () => {
             />
           </div>
 
-          <button
-            type="submit"
-            className="register-btn"
-            disabled={loading}
-          >
-            <span>
-              {loading ? "Logging in..." : "Sign in to account"}
-            </span>
+          <button type="submit" className="register-btn" disabled={loading}>
+            <span>{loading ? "Logging in..." : "Sign in to account"}</span>
 
             {!loading && <span className="btn-arrow">↗</span>}
           </button>
@@ -110,6 +103,11 @@ const Login = () => {
           <Link to="/register">
             Create an account <span>↗</span>
           </Link>
+        </div>
+
+        <div className="recovery-links">
+          <Link to="/forget-username">Forgot username?</Link>
+          <Link to="/forget-password">Forgot password?</Link>
         </div>
 
         <div className="card-bottom">

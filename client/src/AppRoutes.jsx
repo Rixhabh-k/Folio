@@ -4,6 +4,7 @@ import VerifyEmail from "./features/auth/pages/VerifyEmail"
 import Login from "./features/auth/pages/Login"
 import Home from "./components/Home"
 import CompleteProfile from "./features/profile/pages/CompleteProfile"
+import ForgetUsername from "./features/auth/pages/ForgetUsername"
 
 
 const AppRoutes = () => {
@@ -16,6 +17,7 @@ const AppRoutes = () => {
         <Route path="/login" element={<Login/>} />
         <Route path="/" element={<Home/>} />
         <Route path="/complete-profile" element={<CompleteProfile/>} />
+        <Route path="/forget-username" element={<ForgetUsername/>} />
 
         
     </Routes>

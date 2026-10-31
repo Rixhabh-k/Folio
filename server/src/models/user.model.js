@@ -1,4 +1,3 @@
-
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
@@ -50,26 +49,9 @@ const userSchema = new mongoose.Schema(
     },
 
     roles: {
-      type: [
-        {
-          type: String,
-          enum: [
-            "Developer",
-            "Designer",
-            "Tester",
-            "Vibe Coder",
-            "Frontend Developer",
-            "Backend Developer",
-            "Full Stack Developer",
-            "UI/UX Designer",
-          ],
-        },
-      ],
-      default: [],
-      validate: {
-        validator: (roles) => roles.length <= 3,
-        message: "You can select a maximum of 3 roles.",
-      },
+      type: String,
+      trim: true,
+      default: "",
     },
 
     isProfileComplete: {
@@ -79,7 +61,7 @@ const userSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 const UserModel = mongoose.model("User", userSchema);

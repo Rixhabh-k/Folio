@@ -1,28 +1,22 @@
 
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSetupProfile } from "../hooks/useSetupProfile";
 import "../shared/global.css";
 
-const roles = [
-  "Developer",
-  "Designer",
-  "Tester",
-  "Vibe Coder",
-  "Frontend Developer",
-  "Backend Developer",
-  "Full Stack Developer",
-  "UI/UX Designer",
-];
-
-export default function CompleteProfile({ onComplete, loading = false }) {
+export default function CompleteProfile() {
   const navigate = useNavigate();
 
   const [profileImage, setProfileImage] = useState(null);
   const [preview, setPreview] = useState("");
   const [name, setName] = useState("");
   const [bio, setBio] = useState("");
-  const [selectedRoles, setSelectedRoles] = useState([]);
+  const [role, setRole] = useState("");
 
+  // Get profile setup handler and loading state from custom hook
+  const { handleSetupProfile, loading } = useSetupProfile();
+
+  // Generate and clean up profile image preview URL
   useEffect(() => {
     if (!profileImage) {
       setPreview("");
@@ -35,33 +29,26 @@ export default function CompleteProfile({ onComplete, loading = false }) {
     return () => URL.revokeObjectURL(imageUrl);
   }, [profileImage]);
 
-  const handleRoleToggle = (role) => {
-    setSelectedRoles((prev) => {
-      if (prev.includes(role)) {
-        return prev.filter((item) => item !== role);
-      }
-
-      if (prev.length >= 3) return prev;
-
-      return [...prev, role];
-    });
-  };
-
+  // Submit profile data to backend
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const formData = new FormData();
 
+    // Append image only if user selected one
     if (profileImage) {
       formData.append("profileImage", profileImage);
     }
 
     formData.append("name", name);
     formData.append("bio", bio);
-    formData.append("roles", JSON.stringify(selectedRoles));
+    formData.append("roles", role);
 
-    if (onComplete) {
-      await onComplete(formData);
+    try {
+      await handleSetupProfile(formData);
+      navigate("/");
+    } catch (error) {
+      console.error("Setup profile failed:", error);
     }
   };
 
@@ -76,7 +63,9 @@ export default function CompleteProfile({ onComplete, loading = false }) {
 
           <div className="complete-profile-heading">
             <span className="profile-eyebrow">ONE LAST STEP</span>
-            <h1>Make it <span>yours.</span></h1>
+            <h1>
+              Make it <span>yours.</span>
+            </h1>
             <p>
               Let's put a face to your profile. Tell the world
               a little about yourself.
@@ -87,7 +76,10 @@ export default function CompleteProfile({ onComplete, loading = false }) {
 
             {/* Profile Image */}
             <div className="profile-upload-section">
-              <label htmlFor="profile-image" className="profile-image-upload">
+              <label
+                htmlFor="profile-image"
+                className="profile-image-upload"
+              >
                 {preview ? (
                   <img src={preview} alt="Profile preview" />
                 ) : (
@@ -128,6 +120,7 @@ export default function CompleteProfile({ onComplete, loading = false }) {
             {/* Name */}
             <div className="profile-form-group">
               <label htmlFor="profile-name">Your name</label>
+
               <input
                 id="profile-name"
                 type="text"
@@ -156,30 +149,18 @@ export default function CompleteProfile({ onComplete, loading = false }) {
               />
             </div>
 
-            {/* Roles */}
+            {/* Role - Normal text input */}
             <div className="profile-form-group">
-              <div className="profile-label-row">
-                <label>What describes you?</label>
-                <span>Select up to 3</span>
-              </div>
+              <label htmlFor="profile-role">What do you do?</label>
 
-              <div className="role-selection">
-                {roles.map((role) => {
-                  const isSelected = selectedRoles.includes(role);
-
-                  return (
-                    <button
-                      type="button"
-                      key={role}
-                      className={`role-chip ${isSelected ? "selected" : ""}`}
-                      onClick={() => handleRoleToggle(role)}
-                    >
-                      {isSelected && <span>✓</span>}
-                      {role}
-                    </button>
-                  );
-                })}
-              </div>
+              <input
+                id="profile-role"
+                type="text"
+                placeholder="e.g. Full Stack Developer, UI/UX Designer..."
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+                maxLength={60}
+              />
             </div>
 
             {/* Submit */}

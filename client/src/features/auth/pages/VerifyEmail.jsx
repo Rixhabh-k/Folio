@@ -104,7 +104,7 @@ const VerifyEmail = () => {
             <button
               type="button"
               className="register-btn"
-              onClick={() => navigate('/login')}
+              onClick={() => navigate('/complete-profile')}
             >
               <span>Continue to login</span>
               <span className="btn-arrow">↗</span>

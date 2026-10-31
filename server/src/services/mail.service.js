@@ -29,3 +29,4 @@ export async function sendEmail({to,subject,html,text}){
 
     console.log("Email sent:", details.messageId);
 }
+

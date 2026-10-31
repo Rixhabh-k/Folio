@@ -188,6 +188,7 @@ export async function loginUser(req, res) {
         _id: user._id,
         username: user.username,
         email: user.email,
+        isProfileComplete: user.isProfileComplete,
       },
     });
   } catch (error) {

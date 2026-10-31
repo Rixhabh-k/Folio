@@ -14,11 +14,15 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (loading) return;
+
     try {
       const response = await handleLogin({ username, password });
 
-      if (response) {
-        navigate("/");
+      if (response.user.isProfileComplete) {
+        navigate("/dashboard");
+      } else {
+        navigate("/complete-profile");
       }
     } catch (error) {
       console.error("Login failed:", error);
@@ -45,11 +49,15 @@ const Login = () => {
             GOOD TO HAVE YOU BACK
           </span>
 
-          <h1>Welcome<br />back <span>again.</span></h1>
+          <h1>
+            Welcome
+            <br />
+            back <span>again.</span>
+          </h1>
 
           <p>
-            Your space is waiting for you.
-            Sign in and pick up right where you left off.
+            Your space is waiting for you. Sign in and pick up right where you
+            left off.
           </p>
         </div>
 
@@ -89,10 +97,11 @@ const Login = () => {
             className="register-btn"
             disabled={loading}
           >
-            <span>{loading ? "Signing you in..." : "Sign in to account"}</span>
-            <span className="btn-arrow">
-              {loading ? "..." : "↗"}
+            <span>
+              {loading ? "Logging in..." : "Sign in to account"}
             </span>
+
+            {!loading && <span className="btn-arrow">↗</span>}
           </button>
         </form>
 

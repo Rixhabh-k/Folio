@@ -8,11 +8,14 @@ const Register = () => {
   const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const { handleRegister } = useAuth()
+
+  const { handleRegister, loading } = useAuth()
   const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+
+    if (loading) return
 
     try {
       await handleRegister({ username, email, password })
@@ -94,9 +97,16 @@ const Register = () => {
             />
           </div>
 
-          <button type="submit" className="register-btn">
-            <span>Create account</span>
-            <span className="btn-arrow">↗</span>
+          <button
+            type="submit"
+            className="register-btn"
+            disabled={loading}
+          >
+            <span>
+              {loading ? 'Creating account...' : 'Create account'}
+            </span>
+
+            {!loading && <span className="btn-arrow">↗</span>}
           </button>
         </form>
 

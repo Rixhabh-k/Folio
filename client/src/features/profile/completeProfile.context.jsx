@@ -1,28 +1,37 @@
-import { createContext, useState } from "react";
+import { createContext, useState, useContext } from "react";
 import { setupProfile } from "./services/setupProfile.service";
+import { AuthContext } from "../auth/auth.context";
 
 export const SetupProfileContext = createContext();
 
 export function SetupProfileProvider({ children }) {
-  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  const { updateUser } = useContext(AuthContext);
 
   const handleSetupProfile = async (formData) => {
     try {
       setLoading(true);
-      return await setupProfile(formData);
+
+      const response = await setupProfile(formData);
+
+      // Update global AuthContext user
+      updateUser(response.user);
+
+      return response;
     } catch (error) {
       console.error("Profile setup failed:", error);
       throw error;
     } finally {
-        setLoading(false)
+      setLoading(false);
     }
   };
 
-
   return (
-    <SetupProfileContext.Provider value={{handleSetupProfile}} >
-        {children}
+    <SetupProfileContext.Provider
+      value={{ handleSetupProfile, loading }}
+    >
+      {children}
     </SetupProfileContext.Provider>
-  )
+  );
 }

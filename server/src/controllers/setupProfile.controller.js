@@ -12,9 +12,7 @@ export async function setupProfile(req, res) {
   try {
     const userId = req.user._id;
 
-    console.log("BODY:", req.body);
-    console.log("FILE:", req.file);
-    console.log("CONTENT TYPE:", req.headers["content-type"]);
+    
 
     // Get normal text fields from req.body
     const { name, bio, roles } = req.body;

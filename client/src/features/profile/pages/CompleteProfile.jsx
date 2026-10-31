@@ -13,7 +13,6 @@ export default function CompleteProfile() {
   const [bio, setBio] = useState("");
   const [role, setRole] = useState("");
 
-  // Get profile setup handler and loading state from custom hook
   const { handleSetupProfile, loading } = useSetupProfile();
 
   // Generate and clean up profile image preview URL
@@ -33,9 +32,10 @@ export default function CompleteProfile() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (loading) return;
+
     const formData = new FormData();
 
-    // Append image only if user selected one
     if (profileImage) {
       formData.append("profileImage", profileImage);
     }
@@ -46,7 +46,7 @@ export default function CompleteProfile() {
 
     try {
       await handleSetupProfile(formData);
-      navigate("/");
+      navigate("/dashboard");
     } catch (error) {
       console.error("Setup profile failed:", error);
     }
@@ -149,7 +149,7 @@ export default function CompleteProfile() {
               />
             </div>
 
-            {/* Role - Normal text input */}
+            {/* Role */}
             <div className="profile-form-group">
               <label htmlFor="profile-role">What do you do?</label>
 
@@ -169,7 +169,7 @@ export default function CompleteProfile() {
               className="complete-profile-submit"
               disabled={loading || !name.trim()}
             >
-              {loading ? "Saving profile..." : "Complete profile"}
+              {loading ? "Updating profile..." : "Complete profile"}
               {!loading && <span>→</span>}
             </button>
 
@@ -184,6 +184,7 @@ export default function CompleteProfile() {
           className="profile-skip"
           type="button"
           onClick={() => navigate("/")}
+          disabled={loading}
         >
           I'll do this later
         </button>

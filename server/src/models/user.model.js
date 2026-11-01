@@ -54,6 +54,16 @@ const userSchema = new mongoose.Schema(
       default: "",
     },
 
+    passwordResetToken: {
+      type: String,
+      default: null,
+    },
+
+    passwordResetExpires: {
+      type: Date,
+      default: null,
+    },
+
     isProfileComplete: {
       type: Boolean,
       default: false,
